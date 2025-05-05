@@ -84,8 +84,13 @@ inline std::uint32_t Reader<Handler>::handleForm(std::istream& stream,
 {
   std::uint32_t dataSize = header.dataSize;
   const bool compressed  = header.formData.flags & RecordFlags::Compressed;
+  // Check for Oblivion plugin data
+  uint16_t version       = 0;
+  if (header.old.firstChunk.string() != "HEDR") {
+    version = header.version;
+  }
   if (handler.Form(
-          FormData(header.type, header.formData.flags, header.formData.formId))) {
+          FormData(header.type, header.formData.flags, header.formData.formId, version))) {
 
     std::string data;
     data.resize(dataSize);

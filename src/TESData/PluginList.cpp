@@ -777,6 +777,18 @@ bool PluginList::hasNoRecords(const QString& name) const
   return plugin ? plugin->hasNoRecords() : false;
 }
 
+int PluginList::formVersion(const QString& name) const
+{
+  const auto plugin = findPlugin(name);
+  return plugin ? plugin->formVersion() : 0;
+}
+
+float PluginList::headerVersion(const QString& name) const
+{
+  const auto plugin = findPlugin(name);
+  return plugin ? plugin->headerVersion() : 0.0;
+}
+
 QString PluginList::author(const QString& name) const
 {
   const auto plugin = findPlugin(name);
