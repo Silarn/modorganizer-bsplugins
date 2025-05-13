@@ -1012,10 +1012,19 @@ void PluginList::scanDataFiles(bool invalidate)
     if (!fileTree)
       continue;
 
-    for (auto&& entry : *fileTree) {
-      if (entry && isPluginFile(entry->name()) &&
-          !availablePlugins.contains(entry->name(), Qt::CaseInsensitive)) {
-        availablePlugins.append(entry->name());
+    std::shared_ptr<const MOBase::IFileTree> searchDir;
+    if (!m_Organizer->managedGame()->modDataDirectory().isEmpty()) {
+      searchDir =
+          fileTree->findDirectory(m_Organizer->managedGame()->modDataDirectory());
+    } else {
+      searchDir = fileTree;
+    }
+    if (searchDir) {
+      for (auto&& entry : *searchDir) {
+        if (entry && isPluginFile(entry->name()) &&
+            !availablePlugins.contains(entry->name(), Qt::CaseInsensitive)) {
+          availablePlugins.append(entry->name());
+        }
       }
     }
   }
