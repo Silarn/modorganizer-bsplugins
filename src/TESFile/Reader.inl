@@ -16,7 +16,13 @@ inline void Reader<Handler>::parse(const std::filesystem::path& path, Handler& h
   std::ifstream stream;
   stream.open(path, std::ios_base::binary | std::ios_base::in);
   if (!stream.good()) {
-    throw std::runtime_error(std::strerror(errno));
+    char buffer[256];
+    errno_t error = strerror_s(buffer, sizeof(buffer), errno);
+    if (error != 0) {
+      throw std::runtime_error("Unknown error");  // Handle error if strerror_s fails
+    } else {
+      throw std::runtime_error(buffer);
+    }
   }
   parse(stream, handler);
 }
